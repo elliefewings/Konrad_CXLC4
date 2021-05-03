@@ -1,0 +1,60 @@
+"","id_cp_interaction","interacting_pair","Pair","partner_a","partner_b","gene_a","gene_b","secreted","receptor_a","receptor_b","annotation_strategy","is_integrin","pair_a","pair_b","pval","countint","ligand.cell","receptor.cell","rank","mean","lab","pos"
+"1","CPI-SC098C06330","TGFB1_TGFbeta receptor1","Mac|Mac","simple:P01137","complex:TGFbeta receptor1","TGFB1","","True","False","True","curated","False","Mac","Mac",0,16,"Mac","Mac",0.75,0.591,1,1
+"2","CPI-SS00A953C3A","EGF_NRG1","Mac|Mac","simple:P01133","simple:Q02297","EGF","NRG1","True","False","True","I2D","False","Mac","Mac",0,16,"Mac","Mac",0.75,1.488,1,2
+"3","CPI-SS02371A6D6","VEGFA_EPHB2","Mac|Mac","simple:P15692","simple:P29323","VEGFA","EPHB2","True","False","True","I2D","False","Mac","Mac",0,16,"Mac","Mac",0.75,0.505,1,3
+"4","CPI-SS0586F2596","EPHB2_EFNA5","Mac|Mac","simple:P29323","simple:P52803","EPHB2","EFNA5","False","True","False","curated","False","Mac","Mac",0,16,"Mac","Mac",0.75,0.652,1,4
+"5","CPI-SS02AB0C3E0","SPP1_CD44","Mac|Mac","simple:P10451","simple:P16070","SPP1","CD44","True","False","True","I2D,IMEx,InnateDB-All,IntAct","False","Mac","Mac",0,16,"Mac","Mac",0.5,0.852,1,5
+"6","CPI-SS0302E8E8F","CD74_COPA","Mac|Mac","simple:P04233","simple:P53621","CD74","COPA","True","True","False","IMEx,IntAct","False","Mac","Mac",0,16,"Mac","Mac",0.5,0.758,1,6
+"7","CPI-SS065F7DA2A","COPA_P2RY6","Mac|Mac","simple:P53621","simple:Q15077","COPA","P2RY6","True","False","True","IMEx,IntAct","False","Mac","Mac",0.043,16,"Mac","Mac",0.5,0.39,1,7
+"8","CPI-SS077B160B9","IL15_IL15RA","Mac|Mac","simple:P40933","simple:Q13261","IL15","IL15RA","True","False","True","guidetopharmacology.org","False","Mac","Mac",0.047,16,"Mac","Mac",0.5,0.451,1,8
+"9","CPI-SS09808DEAE","CD74_APP","Mac|Mac","simple:P04233","simple:P05067","CD74","APP","False","True","False","curated","False","Mac","Mac",0,16,"Mac","Mac",0.5,1.217,1,9
+"10","CPI-SS09A3FA737","NAMPT_P2RY6","Mac|Mac","simple:P43490","simple:Q15077","NAMPT","P2RY6","True","False","True","IMEx,IntAct","False","Mac","Mac",0,16,"Mac","Mac",0.5,0.328,1,10
+"11","CPI-SS0B9B3870A","VEGFA_FLT1","Mac|Mac","simple:P15692","simple:P17948","VEGFA","FLT1","True","False","True","curated","False","Mac","Mac",0.044,16,"Mac","Mac",0.5,0.598,1,11
+"12","CPI-SS0F4D30D5A","EGFR_EGF","Mac|Mac","simple:P00533","simple:P01133","EGFR","EGF","True","True","False","curated","False","Mac","Mac",0,16,"Mac","Mac",0.5,1.465,1,12
+"13","CPI-SC03DD946B2","TGFB2_TGFbeta receptor1","Mac|Mac","simple:P61812","complex:TGFbeta receptor1","TGFB2","","True","False","True","curated","False","Mac","Mac",0,16,"Mac","Mac",0.25,0.473,1,13
+"14","CPI-SS0822AEF5F","PTPRC_MRC1","Mac|Mac","simple:P08575","simple:P22897","PTPRC","MRC1","False","False","True","curated","False","Mac","Mac",0,16,"Mac","Mac",0.25,0.898,1,14
+"15","CPI-SS0907A7598","FGFR2_FGF9","Mac|Mac","simple:P21802","simple:P31371","FGFR2","FGF9","True","True","False","I2D,InnateDB-All","False","Mac","Mac",0.016,16,"Mac","Mac",0.25,0.929,1,15
+"16","CPI-SS0C1BD22BC","SPP1_PTGER4","Mac|Mac","simple:P10451","simple:P35408","SPP1","PTGER4","True","False","True","IMEx,MINT","False","Mac","Mac",0.008,16,"Mac","Mac",0.25,0.833,1,16
+"17","CPI-SC098C06330","TGFB1_TGFbeta receptor1","Mac|Fibro","simple:P01137","complex:TGFbeta receptor1","TGFB1","","True","False","True","curated","False","Mac","Fibro",0.036,21,"Mac","Fibro",0.75,0.403,1,1
+"18","CPI-SS00A953C3A","EGF_NRG1","Mac|Fibro","simple:P01133","simple:Q02297","EGF","NRG1","True","False","True","I2D","False","Mac","Fibro",0,21,"Mac","Fibro",0.75,1.312,1,2
+"19","CPI-SS02371A6D6","VEGFA_EPHB2","Mac|Fibro","simple:P15692","simple:P29323","VEGFA","EPHB2","True","False","True","I2D","False","Mac","Fibro",0.048,21,"Mac","Fibro",0.75,0.37,1,3
+"20","CPI-SS0586F2596","EPHB2_EFNA5","Mac|Fibro","simple:P29323","simple:P52803","EPHB2","EFNA5","False","True","False","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.75,0.453,1,4
+"21","CPI-SS0302E8E8F","CD74_COPA","Mac|Fibro","simple:P04233","simple:P53621","CD74","COPA","True","True","False","IMEx,IntAct","False","Mac","Fibro",0,21,"Mac","Fibro",0.5,0.781,1,5
+"22","CPI-SS077B160B9","IL15_IL15RA","Mac|Fibro","simple:P40933","simple:Q13261","IL15","IL15RA","True","False","True","guidetopharmacology.org","False","Mac","Fibro",0.044,21,"Mac","Fibro",0.5,0.437,1,6
+"23","CPI-SS085EE60B1","TGFB1_TGFBR3","Mac|Fibro","simple:P01137","simple:Q03167","TGFB1","TGFBR3","True","False","True","curated","False","Mac","Fibro",0.016,21,"Mac","Fibro",0.5,1.015,1,7
+"24","CPI-SS09808DEAE","CD74_APP","Mac|Fibro","simple:P04233","simple:P05067","CD74","APP","False","True","False","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.5,1.308,1,8
+"25","CPI-SS0B9B3870A","VEGFA_FLT1","Mac|Fibro","simple:P15692","simple:P17948","VEGFA","FLT1","True","False","True","curated","False","Mac","Fibro",0.048,21,"Mac","Fibro",0.5,0.528,1,9
+"26","CPI-CS0AB19226A","PlexinA4_complex1_SEMA3A","Mac|Fibro","complex:PlexinA4_complex1","simple:Q14563","","SEMA3A","True","True","False","curated","False","Mac","Fibro",0.004,21,"Mac","Fibro",0.25,0.414,1,10
+"27","CPI-SC033E22B14","PDGFB_PDGFR complex","Mac|Fibro","simple:P01127","complex:PDGFR complex","PDGFB","","True","False","True","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.508,1,11
+"28","CPI-SC0984894BC","TGFB1_TGFbeta receptor2","Mac|Fibro","simple:P01137","complex:TGFbeta receptor2","TGFB1","","True","False","True","curated","False","Mac","Fibro",0.032,21,"Mac","Fibro",0.25,0.409,1,12
+"29","CPI-SS028688B7B","EFNA5_EPHA7","Mac|Fibro","simple:P52803","simple:Q15375","EFNA5","EPHA7","False","False","True","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.526,1,13
+"30","CPI-SS02928C71A","PDGFB_LRP1","Mac|Fibro","simple:P01127","simple:Q07954","PDGFB","LRP1","True","False","True","I2D,InnateDB-All","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.455,1,14
+"31","CPI-SS044C72D0D","SEMA4A_PLXND1","Mac|Fibro","simple:Q9H3S1","simple:Q9Y4D7","SEMA4A","PLXND1","False","False","True","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.213,1,15
+"32","CPI-SS05A26A1DE","PDGFB_PDGFRB","Mac|Fibro","simple:P01127","simple:P09619","PDGFB","PDGFRB","True","False","True","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.508,1,16
+"33","CPI-SS07F60834D","MET_HGF","Mac|Fibro","simple:P08581","simple:P14210","MET","HGF","True","True","False","curated","False","Mac","Fibro",0.032,21,"Mac","Fibro",0.25,0.495,1,17
+"34","CPI-SS0DBA4D668","DPP4_CXCL12","Mac|Fibro","simple:P27487","simple:P48061","DPP4","CXCL12","True","True","False","curated","False","Mac","Fibro",0.004,21,"Mac","Fibro",0.25,0.571,1,18
+"35","CPI-SS0DFA98A14","CSF1R_IL34","Mac|Fibro","simple:P07333","simple:Q6ZMJ4","CSF1R","IL34","True","True","False","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.292,1,19
+"36","CPI-SS0FC01B947","EFNA5_EPHA4","Mac|Fibro","simple:P52803","simple:P54764","EFNA5","EPHA4","False","False","True","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.637,1,20
+"37","CPI-SS0FEEB187C","PDGFB_PDGFRA","Mac|Fibro","simple:P01127","simple:P16234","PDGFB","PDGFRA","True","False","True","curated","False","Mac","Fibro",0,21,"Mac","Fibro",0.25,0.655,1,21
+"38","CPI-SC098C06330","TGFB1_TGFbeta receptor1","Fibro|Mac","simple:P01137","complex:TGFbeta receptor1","TGFB1","","True","False","True","curated","False","Fibro","Mac",0,22,"Fibro","Mac",0.75,0.479,1,1
+"39","CPI-SS00A953C3A","EGF_NRG1","Fibro|Mac","simple:P01133","simple:Q02297","EGF","NRG1","True","False","True","I2D","False","Fibro","Mac",0.004,22,"Fibro","Mac",0.75,1.008,1,2
+"40","CPI-SS02371A6D6","VEGFA_EPHB2","Fibro|Mac","simple:P15692","simple:P29323","VEGFA","EPHB2","True","False","True","I2D","False","Fibro","Mac",0,22,"Fibro","Mac",0.75,0.41,1,3
+"41","CPI-SS0586F2596","EPHB2_EFNA5","Fibro|Mac","simple:P29323","simple:P52803","EPHB2","EFNA5","False","True","False","curated","False","Fibro","Mac",0,22,"Fibro","Mac",0.75,0.517,1,4
+"42","CPI-SS02AB0C3E0","SPP1_CD44","Fibro|Mac","simple:P10451","simple:P16070","SPP1","CD44","True","False","True","I2D,IMEx,InnateDB-All,IntAct","False","Fibro","Mac",0,22,"Fibro","Mac",0.5,0.665,1,5
+"43","CPI-SS03CC15FF3","PDGFRA_PDGFC","Fibro|Mac","simple:P16234","simple:Q9NRA1","PDGFRA","PDGFC","True","True","False","curated","False","Fibro","Mac",0,22,"Fibro","Mac",0.5,0.831,1,6
+"44","CPI-SS065F7DA2A","COPA_P2RY6","Fibro|Mac","simple:P53621","simple:Q15077","COPA","P2RY6","True","False","True","IMEx,IntAct","False","Fibro","Mac",0,22,"Fibro","Mac",0.5,0.413,1,7
+"45","CPI-SS09A3FA737","NAMPT_P2RY6","Fibro|Mac","simple:P43490","simple:Q15077","NAMPT","P2RY6","True","False","True","IMEx,IntAct","False","Fibro","Mac",0,22,"Fibro","Mac",0.5,0.257,1,8
+"46","CPI-SS0E00478B4","NRP2_VEGFA","Fibro|Mac","simple:O60462","simple:P15692","NRP2","VEGFA","True","True","False","curated","False","Fibro","Mac",0.032,22,"Fibro","Mac",0.5,0.989,1,9
+"47","CPI-SS0F4D30D5A","EGFR_EGF","Fibro|Mac","simple:P00533","simple:P01133","EGFR","EGF","True","True","False","curated","False","Fibro","Mac",0,22,"Fibro","Mac",0.5,1.559,1,10
+"48","CPI-CS0BAF97962","PDGFR complex_PDGFD","Fibro|Mac","complex:PDGFR complex","simple:Q9GZP0","","PDGFD","True","True","False","curated","False","Fibro","Mac",0.044,22,"Fibro","Mac",0.25,0.889,1,11
+"49","CPI-SS0055264F3","EGFR_TGFB1","Fibro|Mac","simple:P00533","simple:P01137","EGFR","TGFB1","True","True","False","IMEx,InnateDB-All,MINT","False","Fibro","Mac",0.028,22,"Fibro","Mac",0.25,0.612,1,12
+"50","CPI-SS033E6DE7E","NRP1_VEGFB","Fibro|Mac","simple:O14786","simple:P49765","NRP1","VEGFB","True","True","False","curated","False","Fibro","Mac",0,22,"Fibro","Mac",0.25,0.916,1,13
+"51","CPI-SS03722104E","HGF_CD44","Fibro|Mac","simple:P14210","simple:P16070","HGF","CD44","True","False","True","IMEx,InnateDB-All,IntAct","False","Fibro","Mac",0,22,"Fibro","Mac",0.25,0.34,1,14
+"52","CPI-SS03DA2A820","FGF2_CD44","Fibro|Mac","simple:P09038","simple:P16070","FGF2","CD44","True","False","True","I2D,InnateDB-All","False","Fibro","Mac",0,22,"Fibro","Mac",0.25,0.199,1,15
+"53","CPI-SS04A97448D","FGF1_FGFR2","Fibro|Mac","simple:P05230","simple:P21802","FGF1","FGFR2","True","False","True","I2D,IMEx,InnateDB-All,IntAct,MINT","False","Fibro","Mac",0.016,22,"Fibro","Mac",0.25,0.989,1,16
+"54","CPI-SS05A94DE17","FGF2_FGFR2","Fibro|Mac","simple:P09038","simple:P21802","FGF2","FGFR2","True","False","True","curated","False","Fibro","Mac",0.016,22,"Fibro","Mac",0.25,0.942,1,17
+"55","CPI-SS0947A8549","FLT1_VEGFB","Fibro|Mac","simple:P17948","simple:P49765","FLT1","VEGFB","True","True","False","curated","False","Fibro","Mac",0,22,"Fibro","Mac",0.25,0.371,1,18
+"56","CPI-SS0BEAB521F","EPHA3_EFNA5","Fibro|Mac","simple:P29320","simple:P52803","EPHA3","EFNA5","True","True","False","curated","False","Fibro","Mac",0,22,"Fibro","Mac",0.25,0.63,1,19
+"57","CPI-SS0BF490275","FGFR1_KL","Fibro|Mac","simple:P11362","simple:Q9UEF7","FGFR1","KL","True","True","False","I2D","False","Fibro","Mac",0.049,22,"Fibro","Mac",0.25,0.478,1,20
+"58","CPI-SS0D954EA1C","PDGFRB_PDGFD","Fibro|Mac","simple:P09619","simple:Q9GZP0","PDGFRB","PDGFD","True","True","False","curated","False","Fibro","Mac",0.044,22,"Fibro","Mac",0.25,0.889,1,21
+"59","CPI-SS0DE0A486F","NRP1_VEGFA","Fibro|Mac","simple:O14786","simple:P15692","NRP1","VEGFA","True","True","False","curated","False","Fibro","Mac",0.044,22,"Fibro","Mac",0.25,1.073,1,22

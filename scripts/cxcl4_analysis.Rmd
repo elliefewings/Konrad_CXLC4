@@ -1,0 +1,381 @@
+---
+author: "Eleanor Fewings"
+output: html_document
+---
+
+# start_section  
+```{r start_section}
+
+# Time stamp
+Sys.time()
+
+# Clean up
+rm(list=ls())
+
+# Load libraries
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(magrittr)
+library(Seurat)
+library(stringr)
+library(progeny)
+library(tibble)
+library(pheatmap)
+
+# Folders
+setwd("~/Saez/Konrad_cxcl4/")
+
+# Source functions
+source("C:/Users/ellie/OneDrive/Saez/Pipeline/github/scRNA_analysis/source/source.R")
+
+```
+
+## Load data
+```{r load}
+
+#Load data
+data <- readRDS("CXCL4_Integrated_13_SeuratObjtAfterClusterExclusion.RDS")
+
+#Separate metadata for exploration
+metadata <- data@meta.data
+
+#Plot celltypes
+DimPlot(data, reduction = "umap", label = TRUE)
+
+```
+
+#Compare Ischemia reperfusion and sham vs KO vs WT for fibroblasts and macrophages
+```{r}
+
+#Set identity
+Idents(data) <- "sample"
+
+#Compare markers per cluster
+fibroblasts <- subset(data, subset= clusternames == "Fibro") %>% FindMarkers(ident.1 = "2_WT_IRI", ident.2 = "4_CXCL4KO_IRI", verbose = FALSE)
+macrophages <- subset(data, subset= clusternames == "Mac") %>% FindMarkers(ident.1 = "2_WT_IRI", ident.2 = "4_CXCL4KO_IRI", verbose = FALSE)
+
+#Add gene column
+fibroblasts$gene <- row.names(fibroblasts)
+macrophages$gene <- row.names(macrophages)
+
+#Add gene column
+fibroblasts$clusternames <- "Fibro"
+macrophages$clusternames <- "Mac"
+
+#Merge back results
+markers <- rbind(fibroblasts, macrophages)
+
+#select top 10 per cluster (and select significant only)
+top <- markers %>% filter(p_val_adj < 0.05) %>% group_by(clusternames) %>% top_n(-10, p_val_adj)
+
+#Subset only macrophage and fibroblasts
+cells <- subset(data, subset= (clusternames == "Fibro" | clusternames == "Mac") & (sample == "2_WT_IRI" | sample == "4_CXCL4KO_IRI"))
+
+df <- cells@assays$RNA@data %>% as.data.frame()
+
+df <- df[row.names(df) %in% top$gene,]
+
+#Create annotation dataframe
+meta <- cells@meta.data %>% subset(select=c(clusternames, sample))
+
+meta <- meta[order(meta$clusternames, meta$sample),]
+
+#Order dataframe on metadata order
+df <- df[,match(row.names(meta), colnames(df))]
+
+#Set colours
+myColor <- colorRampPalette(c("Darkblue", "white","red"))(100)
+
+pheatmap(log10(1+df), annotation_col = meta, cluster_cols = FALSE, cluster_rows = TRUE, show_colnames=FALSE, color=myColor)
+
+```
+
+#Pathway analysis
+```{r}
+
+runprog <- function(x){
+
+#Create dataframe of clusters
+CellsClusters <- data.frame(Cell = names(Idents(x)),
+    CellType = as.character(Idents(x)),
+    stringsAsFactors = FALSE)
+
+#Run progeny
+x <- progeny(x, scale=FALSE, organism="Human", top=500, perm=1,
+    return_assay = TRUE)
+
+## We can now directly apply Seurat functions in our Progeny scores. 
+## For instance, we scale the pathway activity scores. 
+x <- Seurat::ScaleData(x, assay = "progeny")
+
+## We transform Progeny scores into a data frame to better handling the results
+progeny_scores_df <-
+    as.data.frame(t(GetAssayData(x, slot = "scale.data",
+        assay = "progeny"))) %>%
+    rownames_to_column("Cell") %>%
+    gather(Pathway, Activity, -Cell)
+
+## We match Progeny scores with the cell clusters.
+progeny_scores_df <- inner_join(progeny_scores_df, CellsClusters)
+
+## We summarize the Progeny scores by cellpopulation
+summarized_progeny_scores <- progeny_scores_df %>%
+    group_by(Pathway, CellType) %>%
+    summarise(avg = mean(Activity), std = sd(Activity))
+
+#Create dataframe for plotting
+summarized_progeny_scores_df <- summarized_progeny_scores %>%
+    dplyr::select(-std) %>%
+    spread(Pathway, avg) %>%
+    data.frame(row.names = 1, check.names = FALSE, stringsAsFactors = FALSE)
+paletteLength = 100
+myColor = colorRampPalette(c("Darkblue", "white","red"))(paletteLength)
+
+progenyBreaks = c(seq(min(summarized_progeny_scores_df), 0,
+                      length.out=ceiling(paletteLength/2) + 1),
+                  seq(max(summarized_progeny_scores_df)/paletteLength,
+                      max(summarized_progeny_scores_df),
+                      length.out=floor(paletteLength/2)))
+
+progeny_hmap = pheatmap(t(summarized_progeny_scores_df[,-1]),fontsize=14,
+                        fontsize_row = 10,
+                        color=myColor, breaks = progenyBreaks,
+                        main = "PROGENy (500)", angle_col = 45,
+                        treeheight_col = 0,  border_color = NA)
+
+out <- list(scores=summarized_progeny_scores, heat=progeny_hmap)
+
+return(out)
+}
+
+fibroblasts <- subset(cells, subset= clusternames == "Fibro")
+
+macrophages <- subset(cells, subset= clusternames == "Mac")
+
+fib.pr <- runprog(fibroblasts)
+mac.pr <- runprog(macrophages)
+
+
+#Cleanup
+rm(df, markers, meta, cells, fibroblasts, macrophages)
+```
+
+#Prepare data for cellphoneDB
+```{r}
+
+#Function to convert mouse to human gene names
+convertratGeneList <- function(x){
+require("biomaRt")
+human <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse <- useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+genesV2 <-  getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = x , mart = mouse, attributesL = c("hgnc_symbol"), martL = human, uniqueRows=T)
+humanx <- unique(genesV2[, 2])
+return(genesV2)
+}
+
+#Create seurat object for 2_WT_IRI and 4_CXCL4KO_IRI
+wt <- subset(data, subset= (clusternames == "Fibro" | clusternames == "Mac") & (sample == "2_WT_IRI"))
+ko <- subset(data, subset= (clusternames == "Fibro" | clusternames == "Mac") & (sample == "4_CXCL4KO_IRI"))
+
+#Create metadata
+wt.meta <- wt@meta.data %>% subset(select=c(clusternames, sample))
+ko.meta <- ko@meta.data %>% subset(select=c(clusternames, sample))
+
+#Create data matrices
+wt.mx <- wt@assays$RNA@data %>% as.matrix()
+ko.mx <- ko@assays$RNA@data %>% as.matrix()
+
+#Create list of names to convert
+wt.nm <- row.names(wt.mx)
+ko.nm <- row.names(ko.mx)
+
+#Convert
+wt.hs <- convertratGeneList(wt.nm)
+ko.hs <- convertratGeneList(ko.nm)
+
+#Reduce to names that have homolog
+wt.hs.mx <- wt.mx[row.names(wt.mx) %in% wt.hs$MGI.symbol,]
+ko.hs.mx <- ko.mx[row.names(ko.mx) %in% ko.hs$MGI.symbol,]
+
+#Filter gene names to match
+wt.hs.r <- wt.hs[wt.hs$MGI.symbol %in% row.names(wt.hs.mx) & !duplicated(wt.hs$MGI.symbol),]
+ko.hs.r <- ko.hs[ko.hs$MGI.symbol %in% row.names(ko.hs.mx) & !duplicated(ko.hs$MGI.symbol),]
+
+#Reorder to match matrix
+wt.hs.r <- wt.hs.r[order(match(wt.hs.r$MGI.symbol, row.names(wt.hs.mx))),]
+ko.hs.r <- ko.hs.r[order(match(ko.hs.r$MGI.symbol, row.names(ko.hs.mx))),]
+
+#Check if the two align
+sum(row.names(wt.hs.mx) != wt.hs.r$MGI.symbol )
+sum(row.names(ko.hs.mx) != ko.hs.r$MGI.symbol )
+
+#Add human gene names
+row.names(wt.hs.mx) <- wt.hs.r$HGNC.symbol
+row.names(ko.hs.mx) <- ko.hs.r$HGNC.symbol
+
+#Clean up
+rm(ko.hs, ko.hs.r, ko.mx, ko, ko.nm, wt.hs, wt.hs.r, wt.mx, wt, wt.nm)
+```
+
+#Write data for cellphoneDB
+```{r}
+
+write.table(wt.hs.mx, "cellphonedb/matrix.wt.txt", quote=FALSE, sep="\t")
+write.table(wt.meta, "cellphonedb/metadata.wt.txt", quote=FALSE, sep="\t")
+
+write.table(ko.hs.mx, "cellphonedb/matrix.ko.txt", quote=FALSE, sep="\t")
+write.table(ko.meta, "cellphonedb/metadata.ko.txt", quote=FALSE, sep="\t")
+
+```
+
+#Load cellphoneDB output
+```{r}
+
+#Read KO data
+ko.pval <- read.table("cellphonedb/ko/out/pvalues.txt", sep="\t", stringsAsFactors = FALSE, header=TRUE, check.names=FALSE)
+ko.means <- read.table("cellphonedb/ko/out/means.txt", sep="\t", stringsAsFactors = FALSE, header=TRUE, check.names=FALSE)
+ko.signif <- read.table("cellphonedb/ko/out/significant_means.txt", sep="\t", stringsAsFactors = FALSE, header=TRUE, check.names=FALSE)
+
+#Read WT data
+wt.pval <- read.table("cellphonedb/wt/out/pvalues.txt", sep="\t", stringsAsFactors = FALSE, header=TRUE, check.names=FALSE)
+wt.means <- read.table("cellphonedb/wt/out/means.txt", sep="\t", stringsAsFactors = FALSE, header=TRUE, check.names=FALSE)
+wt.signif <- read.table("cellphonedb/wt/out/significant_means.txt", sep="\t", stringsAsFactors = FALSE, header=TRUE, check.names=FALSE)
+
+```
+
+
+# Look at top significant interactions
+```{r}
+
+analyse.cellphondb <- function(pval, means, signif, n){
+
+#Set rownames
+rownames(pval) <- pval$id_cp_interaction
+rownames(means) <- means$id_cp_interaction
+rownames(signif) <- signif$id_cp_interaction
+  
+#Add rank value to means file
+signif <- signif %>% subset(select=c(id_cp_interaction, rank))
+means <- merge(signif, means, by="id_cp_interaction")
+
+#Create long format
+longformat <- pval %>% gather(key="Pair", value="pval", 12:ncol(pval)) %>% separate(Pair, c("pair_a", "pair_b"),sep="\\|",remove=FALSE)
+
+#Look at interactions between ligand and receptor only
+shortened <- longformat[(longformat$receptor_a == "True" & longformat$receptor_b == "False") | (longformat$receptor_a == "False" & longformat$receptor_b == "True"),]
+
+#Count number of significant interactions
+shortened <- shortened %>% group_by(Pair) %>% mutate(countint=sum(pval < 0.05))
+
+#Label ligand celltype
+shortened$ligand.cell <- ifelse(shortened$receptor_a == TRUE, shortened$pair_b, shortened$pair_a)
+
+# Label receptor
+shortened$receptor.cell <- ifelse(shortened$receptor_a == TRUE, shortened$pair_a, shortened$pair_b)
+
+#Reformat means
+longformat.means <- means %>% gather(key="Pair", value="mean", 14:ncol(means)) %>% separate(Pair, c("pair_a", "pair_b"),sep="\\|",remove=FALSE)
+
+#Look at interactions between ligand and receptor only
+shortened.means <- longformat.means[(longformat.means$receptor_a == "True" & longformat.means$receptor_b == "False") | (longformat.means$receptor_a == "False" & longformat.means$receptor_b == "True"),]
+
+#Merge means and pvals
+shortened.means <- shortened.means %>% subset(select=c("id_cp_interaction", "rank", "interacting_pair", "Pair", "mean"))
+
+merged <- merge(shortened, shortened.means, by=c("id_cp_interaction", "interacting_pair", "Pair"))
+
+#Select significant values
+top.ints <- merged[merged$pval < 0.05,]
+
+#Order group by mean
+top.ints <- top.ints[order(top.ints$ligand.cell, top.ints$receptor.cell, top.ints$rank, decreasing = TRUE),]
+
+#Label position in group
+top.ints$lab <- 1
+top.ints <- top.ints %>% group_by(ligand.cell, receptor.cell) %>% mutate(pos=cumsum(lab))
+
+#Select top n per group
+sig.short <- top.ints %>% filter(pos <= n)
+
+#Plot
+plot <- ggplot(sig.short, aes(ligand.cell, interacting_pair, colour=rank)) +
+          geom_point(size=5) +
+          facet_grid(~receptor.cell) +
+          scale_colour_continuous(high = "#132B43", low = "#56B1F7") +
+          theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+out <- list(plot=plot, top.ints=top.ints)
+
+return(out)
+
+}
+
+#Create outputs
+out.ko <- analyse.cellphondb(ko.pval, ko.means, ko.signif, 10)
+out.wt <- analyse.cellphondb(wt.pval, wt.means, wt.signif, 10)
+
+```
+
+#Combine WT and KO into one plot
+```{r}
+
+#Add columns stating sample
+out.ko$top.ints$sample <- "KO"
+out.wt$top.ints$sample <- "WT"
+
+#Bind results
+top.int <- rbind(out.ko$top.ints, out.wt$top.ints)
+
+#Select top n per group
+sig.short <- top.int %>% filter(pos <= 10)
+
+#Create different dfs for fibroblast
+fib <- sig.short %>% filter(receptor.cell == "Fibro")
+mac <- sig.short %>% filter(receptor.cell == "Mac")
+
+plot.fib <- ggplot(fib, aes(ligand.cell, interacting_pair, colour=rank)) +
+          geom_point(size=5) +
+          facet_grid(~sample) +
+          scale_colour_continuous(high = "#132B43", low = "#56B1F7") +
+          theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+          ggtitle("Interacting partners where Fibroblast is receptor cell")
+
+plot.mac <- ggplot(mac, aes(ligand.cell, interacting_pair, colour=rank)) +
+          geom_point(size=5) +
+          facet_grid(~sample) +
+          scale_colour_continuous(high = "#132B43", low = "#56B1F7") +
+          theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+          ggtitle("Interacting partners where Macrophage is receptor cell")
+
+```
+
+
+#Write plots
+```{r}
+
+#Write significant interactions
+write.csv(out.ko$top.ints, "cellphonedb/ko/ko.significant_interactions.csv")
+write.csv(out.wt$top.ints, "cellphonedb/wt/wt.significant_interactions.csv")
+
+
+#Write interactions plot
+pdf("cellphonedb/ko/ko.top_significant_interactions.pdf", width=18, height=9)
+print(out.ko$plot)
+dev.off()
+
+pdf("cellphonedb/wt/wt.top_significant_interactions.pdf", width=18, height=9)
+print(out.wt$plot)
+dev.off()
+
+#Write alternative interactions plot
+pdf("cellphonedb/mac.top_significant_interactions.pdf", width=18, height=9)
+print(plot.mac)
+dev.off()
+
+pdf("cellphonedb/fib.top_significant_interactions.pdf", width=18, height=9)
+print(plot.fib)
+dev.off()
+
+```
+
